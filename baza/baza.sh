@@ -49,6 +49,6 @@ case $zmienna in
   *)    clear
 	echo "Wpisałeś $zmienna. Nie wiem co to jest"
 esac
-#dupass zmiana 3 
+ 
 read zmienna
 done

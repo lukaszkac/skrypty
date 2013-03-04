@@ -1,0 +1,19 @@
+server {
+  listen 80;
+
+  server_name qpa.pl www.qpa.pl;
+  access_log /var/log/nginx/access_qpa.pl.log;
+  error_log  /var/log/nginx/error_qpa.log;
+
+  location / {
+        proxy_redirect off;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_pass http://qpa.pl:8080;
+  }
+
+  location ~* ^.+\.(htm|html|jpg|jpeg|gif|png|ico|css|zip|gz|bz2|pdf|odt|txt|tar|bmp|rtf|js|swf|avi|mp4|mp3|ogg|flv)$ {
+        expires 30d; #adjust to your static content's update frequency
+        root /var/www;
+ }
+}

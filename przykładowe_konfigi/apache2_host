@@ -1,0 +1,6 @@
+<VirtualHost *:8080>
+	ServerAdmin lukaszkac@localhost
+	DocumentRoot /var/www
+	ServerName qpa.pl
+	ServerAlias www.qpa.pl
+</VirtualHost>

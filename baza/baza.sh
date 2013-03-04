@@ -1,4 +1,6 @@
 #!/bin/bash
+# 
+# Autor: Łukasz Kąc
 #
 zmienna="h"
 while [ zmienna != "q" ] ; do
@@ -49,6 +51,10 @@ case $zmienna in
   *)    clear
 	echo "Wpisałeś $zmienna. Nie wiem co to jest"
 esac
+<<<<<<< HEAD
  
+=======
+
+>>>>>>> 1441730ec5c0ea15f79abcbd81084357d7ffcde2
 read zmienna
 done

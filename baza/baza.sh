@@ -13,9 +13,9 @@ case $zmienna in
 	echo "a - Dodanie wpisu"
 	echo "r - Usuniecie wpisu"
 	echo "z - Zapis sumy kontrolnej md5"
-	echo "s - sprawdzenie sumy kontrolnej md5";;
+	echo "s - Sprawdzenie sumy kontrolnej md5";;
   "w")  clear
-	echo "W bazie danych mamy:" 
+	echo "Obecne wpisy bazy danych" 
 	cat baza.txt ;;
   "q")  clear
 	echo "Dziękujemy i zapraszamy ponownie"
@@ -33,7 +33,7 @@ case $zmienna in
 	read g
 	nrwpisu=`grep ^$d baza.txt`
 	clear
-	echo "Chcesz usunąć wpis (y/n)"
+	echo "Potwierdź (y/n)"
 	echo "$nrwpisu"
 	read d
 		case $d in

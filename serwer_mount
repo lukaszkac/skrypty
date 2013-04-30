@@ -1,0 +1,65 @@
+#!/bin/bash
+# montowanie serwerów sshfs
+case $1 in
+	"start")
+		spra=`mount | awk '/serwery.pl/ {print $2 }'`
+		case $spra in
+			"on")
+				echo "tarzan.serwery.pl already mount"
+				;;
+			"")
+				echo "tarzan.serwery.pl mounted"
+				echo FATALITY1a | sshfs admin@tarzan.serwery.pl:/ /home/lukaszkac/serwery/provider -o workaround=rename -o password_stdin
+				;;
+		esac
+		sprb=`mount | awk '/nazwa.pl/ {print $2 }'`
+                case $sprb in
+                        "on")
+                                echo "tarzan.nazwa.pl already mount"
+                                ;;
+                        "")
+                                echo "tarzan.nazwa.pl mounted"
+                                echo  FATALITY1a | sshfs tarzan@tarzan.nazwa.pl:/.file /home/lukaszkac/serwery/active -o workaround=rename -o password_stdin
+				;;
+		esac
+	;;
+	"stop")
+		killall sshfs
+		sudo umount /home/lukaszkac/serwery/provider 2> /dev/null
+		echo "tarzan.nazwa.pl unmonted"
+		sudo umount /home/lukaszkac/serwery/active 2> /dev/null
+		echo "tarzan.serwery.pl unmonted"
+	;;
+	"restart")
+		killall sshfs
+                sudo umount /home/lukaszkac/serwery/provider 2> /dev/null
+                sudo umount /home/lukaszkac/serwery/active 2> /dev/null
+		echo FATALITY1a | sshfs admin@tarzan.serwery.pl:/ /home/lukaszkac/serwery/provider -o workaround=rename -o password_stdin
+		echo "tarzan.serwery.pl remounted"
+		echo FATALITY1a | sshfs tarzan@tarzan.nazwa.pl:/.file /home/lukaszkac/serwery/active -o workaround=rename -o password_stdin
+		echo "tarzan.nazwa.pl remounted"
+	;;
+	"status")
+		spra=`mount | awk '/serwery.pl/ {print $2 }'`
+                case $spra in
+                        "on")
+                                echo "tarzan.serwery.pl is mounted"
+                                ;;
+			"")
+                                echo "tarzan.serwery.pl is not mounted"
+				;;
+		esac
+		sprb=`mount | awk '/nazwa.pl/ {print $2 }'`
+		case $sprb in
+                        "on")
+                                echo "tarzan.nazwa.pl is mounted"
+                                ;;
+			"")
+                                echo "tarzan.nazwa.pl is not mounted"
+                                ;;
+		esac
+	;;
+	*)
+		echo "Obsługiwane opcje start|stop|restart|status"
+	;;
+esac

@@ -1,0 +1,71 @@
+### BEGIN INIT INFO
+# Provides:          serwer_mount
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Montowanie serwerów
+# Description:       Montowanie serwerów w NetArt. Montowane zasoby dyskowe poprzez SSHFS
+### END INIT INFO
+
+# Using the lsb functions to perform the operations.
+. /lib/lsb/init-functions
+
+case $1 in
+	start)
+		status1=`mount | awk '/serwery.pl/ {print $2 }'`
+		if [ "$status1" = on ] ; then 
+			log_daemon_msg "Server Provider already mount"
+			log_end_msg 1 
+		else
+			echo FATALITY1a | sshfs admin@tarzan.serwery.pl:/ /home/lukaszkac/serwery/provider -o workaround=rename -o password_stdin
+ 			log_daemon_msg "Mount server Provider"
+			log_end_msg 0
+		fi
+
+		status2=`mount | awk '/nazwa.pl/ {print $2 }'`
+		if [ "$status2" = on ] ; then
+			log_daemon_msg "Server Active already mount"
+			log_end_msg 1 
+		else
+			echo  FATALITY1a | sshfs tarzan@tarzan.nazwa.pl:/.file /home/lukaszkac/serwery/active -o workaround=rename -o password_stdin
+			log_daemon_msg "Mount server Active"
+			log_end_msg 0
+		fi
+		;;
+	stop)
+		status3=`ps aux |grep sshfs | wc -l`
+		if [ "$status3" = 1 ] ; then
+			log_daemon_msg "Serwers is not mounted"
+			log_end_msg 1
+		else
+		killall sshfs
+			log_daemon_msg "Unmount all servers"
+			log_end_msg 0
+		fi
+		;;
+	restart)
+		$0 stop && sleep 2 && $0 start
+		;;
+	status)
+		status1=`mount | awk '/serwery.pl/ {print $2 }'`
+		if [ "$status1" = on ] ; then
+			log_daemon_msg "Server Provider is mount"
+			log_end_msg 0
+		else
+			log_daemon_msg "Server Provider is not mount"
+			log_end_msg 1
+		fi
+
+		status2=`mount | awk '/nazwa.pl/ {print $2 }'`
+		if [ "$status2" = on ] ; then
+			log_daemon_msg "Server Active is mount"
+			log_end_msg 0
+                else
+			log_daemon_msg "Server Active is not mount"
+			log_end_msg 1
+		fi
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart|status}"
+		exit 2
+		;;
+esac
